@@ -1,0 +1,460 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { API_ENDPOINTS } from "../config/api";
+import { baseApi } from "./baseApi";
+
+export interface ApiResponse<T> {
+    success: boolean;
+    statusCode: number;
+    message: string;
+    data: T;
+}
+
+export interface ArtistData {
+    id: string;
+    name: string;
+    bio: string;
+    image: string | null;
+    banner: string | null;
+    location: string;
+    website: string;
+    spotify: string;
+    appleMusic: string;
+    youtube: string;
+    behindGallery: string[];
+    instagram: string;
+    twitter: string;
+    facebook: string;
+    tiktok: string;
+    genres: string[];
+    popularity: number;
+    followers: number;
+    awards: number;
+    activeYearsStart: string;
+    activeYearsEnd: string | null;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface ArtistResponse {
+    success: boolean;
+    statusCode: number;
+    message: string;
+    data: {
+        id: string;
+        name: string;
+        bio: string;
+        image: string | null;
+        banner: string | null;
+        location: string;
+        website: string;
+        spotify: string;
+        appleMusic: string;
+        youtube: string;
+        behindGallery: string[];
+        instagram: string;
+        twitter: string;
+        facebook: string;
+        tiktok: string;
+        genres: string[];
+        popularity: number;
+        followers: number;
+        awards: number;
+        activeYearsStart: string;
+        activeYearsEnd: string | null;
+        createdAt: string;
+        updatedAt: string;
+    };
+}
+
+/* =======================
+   Product Types
+======================= */
+export interface ProductTrack {
+    id: string;
+    name: string;
+    duration: string;
+    url: string;
+    productId: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface Product {
+    id: string;
+    title: string;
+    category: string;
+    price: number;
+    discountPrice: number;
+    stock: number;
+    description: string;
+    shippingInfo: string;
+    returnPolicy: string;
+    mainImage: string | null;
+    gallery: string[];
+    sizes: string[];
+    colors: string[];
+    artistId: string;
+    isDeleted: boolean;
+    createdAt: string;
+    updatedAt: string;
+    tracks: ProductTrack[];
+    artist: ArtistData;
+    productType: string;
+}
+
+export type ProductResponse = ApiResponse<Product>;
+export interface ProductDetailsResponse {
+    success: boolean;
+    statusCode: number;
+    message: string;
+    data: {
+        id: string;
+        title: string;
+        category: string;
+        price: number;
+        discountPrice: number;
+        stock: number;
+        description: string;
+        shippingInfo: string;
+        returnPolicy: string;
+        mainImage: string;
+        gallery: string[];
+        sizes: string[];
+        colors: string[];
+        artistId: string;
+        isDeleted: boolean;
+        createdAt: string;
+        updatedAt: string;
+
+        tracks: {
+            id: string;
+            name: string;
+            duration: string;
+            url: string;
+            productId: string;
+            createdAt: string;
+            updatedAt: string;
+        }[];
+
+        artist: {
+            id: string;
+            name: string;
+            bio: string;
+            banner: string;
+            image: string;
+            location: string;
+            website: string;
+            verified: boolean;
+            spotify: string;
+            appleMusic: string;
+            youtube: string;
+            behindGallery: string[];
+            facebook: string | null;
+            instagram: string;
+            twitter: string;
+            tiktok: string;
+            genres: string[];
+            popularity: number;
+            followers: number;
+            activeYearsStart: string;
+            activeYearsEnd: string | null;
+            awards: number;
+            createAtBy: string;
+            musicIds: string[];
+            albumIds: string[];
+            createdAt: string;
+            updatedAt: string;
+            isDeleted: boolean;
+        };
+    };
+}
+
+/* =======================
+   Order Types
+======================= */
+export interface OrderItem {
+    id: string;
+    title: string;
+    quantity: number;
+    price: number;
+    imageUrl: string;
+    size?: string;
+    color?: string;
+    product: {
+        id: string;
+        title: string;
+        mainImage: string;
+        productType: string;
+        category: string;
+    };
+}
+
+export interface Order {
+    id: string;
+    orderNumber: string;
+    userId: string;
+    subtotal: number;
+    shippingCharge: number;
+    tax: number;
+    discount: number;
+    totalAmount: number;
+    status: string;
+    paymentStatus: string;
+    paymentIntentId: string;
+    paymentMethod: string | null;
+    createdAt: string;
+    updatedAt: string;
+    user: {
+        id: string;
+        fullName: string;
+        email: string;
+        image: string | null;
+    };
+    items: OrderItem[];
+    totalPrice: number;
+    itemsCount: number;
+}
+
+export interface OrdersResponse {
+    success: boolean;
+    statusCode: number;
+    message: string;
+    meta: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPage: number;
+    };
+    data: Order[];
+}
+
+export interface ShippingInfo {
+    id: string;
+    orderId: string;
+    fullName: string;
+    email: string;
+    phoneNumber: string;
+    address: string;
+    city: string;
+    postCode: string;
+    country: string;
+    trackingNumber: string | null;
+    carrier: string | null;
+    estimatedDelivery: string | null;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface PaymentInfo {
+    id: string;
+    amount: number;
+    status: string;
+    paymentMethod: string;
+    receiptUrl: string;
+    paidAt: string;
+}
+
+export interface OrderDetail extends Order {
+    donarInfoId: string | null;
+    shippingInfo: ShippingInfo;
+    payment: PaymentInfo;
+}
+
+export type SingleOrderResponse = ApiResponse<OrderDetail>;
+export interface InventoryProduct {
+    productId: string;
+    productName: string;
+    stockLevel: number;
+    reorderPoint: number;
+    status: string;
+    action: string;
+}
+
+export interface InventoryResponse {
+    success: boolean;
+    statusCode: number;
+    message: string;
+    meta: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPage: number;
+    };
+    data: InventoryProduct[];
+}
+
+export interface InventoryDetail {
+    productId: string;
+    productName: string;
+    stockLevel: number;
+    reorderPoint: number;
+    status: string;
+    mainImage: string;
+}
+
+export type InventoryDetailResponse = ApiResponse<InventoryDetail>;
+
+// post a new artitst
+export const adminApi = baseApi.injectEndpoints({
+    endpoints: (builder) => ({
+        addArtist: builder.mutation<ArtistResponse, FormData>({
+            query: (artistFormData) => ({
+                url: API_ENDPOINTS.ADMIN.ADD_ARTIST,
+                method: "POST",
+                body: artistFormData,
+            }),
+        }),
+        addProduct: builder.mutation<ProductResponse, any>({
+            query: (body: any) => ({
+                url: API_ENDPOINTS.ADMIN.ADD_PRODUCT,
+                method: "POST",
+                body,
+            }),
+        }),
+
+        updateSingleArtist: builder.mutation<
+            ArtistResponse,
+            { id: string; formData: FormData }
+        >({
+            query: ({ id, formData }) => {
+                console.log(formData);
+                return {
+                    url: `${API_ENDPOINTS.ADMIN.UPDATE_ARTIST}/${id}`,
+                    method: "PUT",
+                    body: formData,
+                };
+            },
+        }),
+        deleteUserById: builder.mutation<ArtistResponse, string>({
+            query: (id) => {
+                return {
+                    url: `${API_ENDPOINTS.ADMIN.UPDATE_ARTIST}/${id}`,
+                    method: "DELETE",
+                };
+            },
+            invalidatesTags: ["Artist"],
+        }),
+
+        getProducts: builder.query<ProductResponse, any>({
+            query: () => ({
+                url: API_ENDPOINTS.ADMIN.GET_PRODUCTS,
+                method: "GET",
+            }),
+        }),
+        getSingleProduct: builder.query<ProductDetailsResponse, string>({
+            query: (id: string) => ({
+                url: `${API_ENDPOINTS.ADMIN.GET_PRODUCTS}/${id}`,
+                method: "GET",
+            }),
+        }),
+
+        updateSingleProduct: builder.mutation<
+            ProductResponse,
+            { id: string; body: FormData }
+        >({
+            query: ({ id, body }) => ({
+                url: `${API_ENDPOINTS.ADMIN.UPDATE_PRODUCT}/${id}`,
+                method: "PUT",
+                body,
+            }),
+        }),
+
+        deleteSingleProduct: builder.mutation<ProductResponse, string>({
+            query: (id: string) => ({
+                url: `${API_ENDPOINTS.ADMIN.DELETE_PRODUCT}/${id}`,
+                method: "DELETE",
+            }),
+        }),
+        getAllOrders: builder.query<
+            OrdersResponse,
+            {
+                page?: number;
+                limit?: number;
+                sortBy?: string;
+                sortOrder?: string;
+            }
+        >({
+            query: ({
+                page = 1,
+                limit = 5,
+                sortBy = "createdAt",
+                sortOrder = "desc",
+            }) => ({
+                url: `${API_ENDPOINTS.ORDERS.GET_ALL_ORDERS}?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
+                method: "GET",
+            }),
+            providesTags: ["Orders"],
+        }),
+        getInventory: builder.query<
+            InventoryResponse,
+            {
+                page?: number;
+                limit?: number;
+                sortBy?: string;
+                sortOrder?: string;
+            }
+        >({
+            query: ({
+                page = 1,
+                limit = 5,
+                sortBy = "createdAt",
+                sortOrder = "desc",
+            }) => ({
+                url: `${API_ENDPOINTS.ADMIN.GET_INVENTORY}?page=${page}&limit=${limit}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
+                method: "GET",
+            }),
+        }),
+        getInventoryDetail: builder.query<InventoryDetailResponse, string>({
+            query: (id: string) => ({
+                url: `${API_ENDPOINTS.ADMIN.GET_INVENTORY}/${id}`,
+                method: "GET",
+            }),
+        }),
+        updateDemoStatus: builder.mutation<
+            any,
+            { id: string; status: "APPROVED" | "REJECTED" }
+        >({
+            query: ({ id, status }) => ({
+                url: `${API_ENDPOINTS.ADMIN.UPDATE_DEMO_STATUS}/${id}`,
+                method: "PATCH",
+                body: { status },
+            }),
+            invalidatesTags: ["Demos"],
+        }),
+        getSingleOrder: builder.query<SingleOrderResponse, string>({
+            query: (id: string) => ({
+                url: `${API_ENDPOINTS.ORDERS.GET_SINGLE_ORDER}/${id}`,
+                method: "GET",
+            }),
+            providesTags: ["Orders"],
+        }),
+        updateOrderStatus: builder.mutation<
+            any,
+            { orderId: string; status: string }
+        >({
+            query: ({ orderId, status }) => ({
+                url: `${API_ENDPOINTS.ORDERS.UPDATE_ORDER_STATUS}/${orderId}`,
+                method: "PATCH",
+                body: { status },
+            }),
+            invalidatesTags: ["Orders"],
+        }),
+    }),
+});
+
+export const {
+    useAddArtistMutation,
+    useUpdateSingleArtistMutation,
+    useDeleteUserByIdMutation,
+    useGetProductsQuery,
+    useAddProductMutation,
+    useGetSingleProductQuery,
+    useUpdateSingleProductMutation,
+    useDeleteSingleProductMutation,
+    useGetAllOrdersQuery,
+    useGetInventoryQuery,
+    useGetInventoryDetailQuery,
+    useUpdateDemoStatusMutation,
+    useGetSingleOrderQuery,
+    useUpdateOrderStatusMutation,
+} = adminApi;
